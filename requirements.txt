@@ -7,3 +7,7 @@ streamlit
 fastapi
 uvicorn
 sse_starlette
+bs4
+beautifulsoup4
+playwright
+tiktoken
