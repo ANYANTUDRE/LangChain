@@ -97,7 +97,7 @@ class QueryCheckerTool(BaseSparkSQLTool, BaseTool):
             from langchain.chains.llm import LLMChain
 
             values["llm_chain"] = LLMChain(
-                llm=values.get("llm"),  # type: ignore[arg-type]
+                llm=values.get("llm"),
                 prompt=PromptTemplate(
                     template=QUERY_CHECKER, input_variables=["query"]
                 ),

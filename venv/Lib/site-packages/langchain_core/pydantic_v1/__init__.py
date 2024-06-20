@@ -12,9 +12,9 @@ from importlib import metadata
 # * This change is easier to roll out and roll back.
 
 try:
-    from pydantic.v1 import *  # noqa: F403
+    from pydantic.v1 import *  # noqa: F403 # type: ignore
 except ImportError:
-    from pydantic import *  # type: ignore # noqa: F403
+    from pydantic import *  # noqa: F403 # type: ignore
 
 
 try:

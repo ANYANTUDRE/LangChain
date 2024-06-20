@@ -78,9 +78,7 @@ def create_openai_tools_agent(
                 ]
             )
     """
-    missing_vars = {"agent_scratchpad"}.difference(
-        prompt.input_variables + list(prompt.partial_variables)
-    )
+    missing_vars = {"agent_scratchpad"}.difference(prompt.input_variables)
     if missing_vars:
         raise ValueError(f"Prompt missing required variables: {missing_vars}")
 

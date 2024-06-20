@@ -14,7 +14,6 @@ from typing import (
     Tuple,
     Union,
 )
-from uuid import UUID
 
 from langchain_core.agents import (
     AgentAction,
@@ -55,7 +54,6 @@ class AgentExecutorIterator:
         tags: Optional[list[str]] = None,
         metadata: Optional[Dict[str, Any]] = None,
         run_name: Optional[str] = None,
-        run_id: Optional[UUID] = None,
         include_run_info: bool = False,
         yield_actions: bool = False,
     ):
@@ -69,7 +67,6 @@ class AgentExecutorIterator:
         self.tags = tags
         self.metadata = metadata
         self.run_name = run_name
-        self.run_id = run_id
         self.include_run_info = include_run_info
         self.yield_actions = yield_actions
         self.reset()
@@ -79,7 +76,6 @@ class AgentExecutorIterator:
     tags: Optional[list[str]]
     metadata: Optional[Dict[str, Any]]
     run_name: Optional[str]
-    run_id: Optional[UUID]
     include_run_info: bool
     yield_actions: bool
 
@@ -166,7 +162,6 @@ class AgentExecutorIterator:
         run_manager = callback_manager.on_chain_start(
             dumpd(self.agent_executor),
             self.inputs,
-            self.run_id,
             name=self.run_name,
         )
         try:
@@ -232,7 +227,6 @@ class AgentExecutorIterator:
         run_manager = await callback_manager.on_chain_start(
             dumpd(self.agent_executor),
             self.inputs,
-            self.run_id,
             name=self.run_name,
         )
         try:

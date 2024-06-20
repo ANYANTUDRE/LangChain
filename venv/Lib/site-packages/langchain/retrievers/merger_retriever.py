@@ -72,11 +72,8 @@ class MergerRetriever(BaseRetriever):
 
         # Get the results of all retrievers.
         retriever_docs = [
-            retriever.invoke(
-                query,
-                config={
-                    "callbacks": run_manager.get_child("retriever_{}".format(i + 1))
-                },
+            retriever.get_relevant_documents(
+                query, callbacks=run_manager.get_child("retriever_{}".format(i + 1))
             )
             for i, retriever in enumerate(self.retrievers)
         ]
@@ -107,11 +104,8 @@ class MergerRetriever(BaseRetriever):
         # Get the results of all retrievers.
         retriever_docs = await asyncio.gather(
             *(
-                retriever.ainvoke(
-                    query,
-                    config={
-                        "callbacks": run_manager.get_child("retriever_{}".format(i + 1))
-                    },
+                retriever.aget_relevant_documents(
+                    query, callbacks=run_manager.get_child("retriever_{}".format(i + 1))
                 )
                 for i, retriever in enumerate(self.retrievers)
             )

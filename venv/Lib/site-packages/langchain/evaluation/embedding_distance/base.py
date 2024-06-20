@@ -3,38 +3,19 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from langchain_core.callbacks.manager import (
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain_core.embeddings import Embeddings
+from langchain_core.pydantic_v1 import Field, root_validator
+
+from langchain.callbacks.manager import (
     AsyncCallbackManagerForChainRun,
     CallbackManagerForChainRun,
     Callbacks,
 )
-from langchain_core.embeddings import Embeddings
-from langchain_core.pydantic_v1 import Field, root_validator
-
 from langchain.chains.base import Chain
 from langchain.evaluation.schema import PairwiseStringEvaluator, StringEvaluator
 from langchain.schema import RUN_KEY
-
-
-def _embedding_factory() -> Embeddings:
-    """Create an Embeddings object.
-    Returns:
-        Embeddings: The created Embeddings object.
-    """
-    # Here for backwards compatibility.
-    # Generally, we do not want to be seeing imports from langchain community
-    # or partner packages in langchain.
-    try:
-        from langchain_openai import OpenAIEmbeddings
-    except ImportError:
-        try:
-            from langchain_community.embeddings.openai import OpenAIEmbeddings
-        except ImportError:
-            raise ImportError(
-                "Could not import OpenAIEmbeddings. Please install the "
-                "OpenAIEmbeddings package using `pip install langchain-openai`."
-            )
-    return OpenAIEmbeddings()
+from langchain.utils.math import cosine_similarity
 
 
 class EmbeddingDistance(str, Enum):
@@ -64,7 +45,7 @@ class _EmbeddingDistanceChainMixin(Chain):
                                             for comparing the embeddings.
     """
 
-    embeddings: Embeddings = Field(default_factory=_embedding_factory)
+    embeddings: Embeddings = Field(default_factory=OpenAIEmbeddings)
     distance_metric: EmbeddingDistance = Field(default=EmbeddingDistance.COSINE)
 
     @root_validator(pre=False)
@@ -78,28 +59,7 @@ class _EmbeddingDistanceChainMixin(Chain):
             Dict[str, Any]: The validated values.
         """
         embeddings = values.get("embeddings")
-        types_ = []
-        try:
-            from langchain_openai import OpenAIEmbeddings
-
-            types_.append(OpenAIEmbeddings)
-        except ImportError:
-            pass
-
-        try:
-            from langchain_community.embeddings.openai import OpenAIEmbeddings
-
-            types_.append(OpenAIEmbeddings)
-        except ImportError:
-            pass
-
-        if not types_:
-            raise ImportError(
-                "Could not import OpenAIEmbeddings. Please install the "
-                "OpenAIEmbeddings package using `pip install langchain-openai`."
-            )
-
-        if isinstance(embeddings, tuple(types_)):
+        if isinstance(embeddings, OpenAIEmbeddings):
             try:
                 import tiktoken  # noqa: F401
             except ImportError:
@@ -163,14 +123,6 @@ class _EmbeddingDistanceChainMixin(Chain):
         Returns:
             np.ndarray: The cosine distance.
         """
-        try:
-            from langchain_community.utils.math import cosine_similarity
-        except ImportError:
-            raise ImportError(
-                "The cosine_similarity function is required to compute cosine distance."
-                " Please install the langchain-community package using"
-                " `pip install langchain-community`."
-            )
         return 1.0 - cosine_similarity(a, b)
 
     @staticmethod

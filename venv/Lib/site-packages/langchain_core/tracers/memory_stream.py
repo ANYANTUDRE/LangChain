@@ -37,11 +37,7 @@ class _SendStream(Generic[T]):
 
     def send_nowait(self, item: T) -> None:
         """Schedule the item to be written to the queue using the original loop."""
-        try:
-            self._reader_loop.call_soon_threadsafe(self._queue.put_nowait, item)
-        except RuntimeError:
-            if not self._reader_loop.is_closed():
-                raise  # Raise the exception if the loop is not closed
+        self._reader_loop.call_soon_threadsafe(self._queue.put_nowait, item)
 
     async def aclose(self) -> None:
         """Schedule the done object write the queue using the original loop."""
@@ -49,11 +45,7 @@ class _SendStream(Generic[T]):
 
     def close(self) -> None:
         """Schedule the done object write the queue using the original loop."""
-        try:
-            self._reader_loop.call_soon_threadsafe(self._queue.put_nowait, self._done)
-        except RuntimeError:
-            if not self._reader_loop.is_closed():
-                raise  # Raise the exception if the loop is not closed
+        self._reader_loop.call_soon_threadsafe(self._queue.put_nowait, self._done)
 
 
 class _ReceiveStream(Generic[T]):

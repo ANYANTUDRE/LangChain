@@ -1,5 +1,4 @@
 """Web base loader class."""
-
 import asyncio
 import logging
 import warnings
@@ -10,12 +9,11 @@ import requests
 from langchain_core.documents import Document
 
 from langchain_community.document_loaders.base import BaseLoader
-from langchain_community.utils.user_agent import get_user_agent
 
 logger = logging.getLogger(__name__)
 
 default_header_template = {
-    "User-Agent": get_user_agent(),
+    "User-Agent": "",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*"
     ";q=0.8",
     "Accept-Language": "en-US,en;q=0.5",
@@ -136,8 +134,6 @@ class WebBaseLoader(BaseLoader):
                         ssl=None if self.session.verify else False,
                         cookies=self.session.cookies.get_dict(),
                     ) as response:
-                        if self.raise_for_status:
-                            response.raise_for_status()
                         return await response.text()
                 except aiohttp.ClientConnectionError as e:
                     if i == retries - 1:

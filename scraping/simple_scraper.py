@@ -14,12 +14,12 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 os.environ["OLLAMA_HOST"] = os.getenv("OLLAMA_HOST")
 
-llm = Ollama(model="mistral") 
+llm = Ollama(model="mistral", base_url="https://4ad2-34-168-189-244.ngrok-free.app")  # Assuming you have pulled the "llama3" model
 schema = {
-    "properties":{"Mooré": {"type": "string"},
-                  "francais": {"type": "string"},
+    "properties":{"Texte Mooré": {"type": "string"},
+                  "Texte Francais": {"type": "string"},
                 },
-    "required": ["Mooré", "francais"],
+    "required": ["Texte Mooré", "Texte Francais"],
 }
 
 def extract(content: str, schema: dict):
@@ -37,7 +37,7 @@ def scrape_with_playwright(urls, schema):
 
     # Grab the first 1000 tokens of the site
     splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-        chunk_size=1000, chunk_overlap=0
+        chunk_size=2000, chunk_overlap=0
     )
     splits = splitter.split_documents(docs_transformed)
 

@@ -11,3 +11,5 @@ bs4
 beautifulsoup4
 playwright
 tiktoken
+scrapegraphai
+nest_asyncio

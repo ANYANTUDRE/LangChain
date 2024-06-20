@@ -1,8 +1,7 @@
 from typing import Any, Union
 
-from langchain_core.utils.json import parse_json_markdown
-
 from langchain.evaluation.schema import StringEvaluator
+from langchain.output_parsers.json import parse_json_markdown
 
 
 class JsonSchemaEvaluator(StringEvaluator):
@@ -74,7 +73,7 @@ class JsonSchemaEvaluator(StringEvaluator):
         return node
 
     def _validate(self, prediction: Any, schema: Any) -> dict:
-        from jsonschema import ValidationError, validate
+        from jsonschema import ValidationError, validate  # noqa: F401
 
         try:
             validate(instance=prediction, schema=schema)

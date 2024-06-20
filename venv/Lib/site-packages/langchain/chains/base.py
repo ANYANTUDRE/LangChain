@@ -1,5 +1,4 @@
 """Base interface that all chains should implement."""
-
 import inspect
 import json
 import logging
@@ -128,7 +127,6 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
         tags = config.get("tags")
         metadata = config.get("metadata")
         run_name = config.get("run_name") or self.get_name()
-        run_id = config.get("run_id")
         include_run_info = kwargs.get("include_run_info", False)
         return_only_outputs = kwargs.get("return_only_outputs", False)
 
@@ -147,7 +145,6 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
         run_manager = callback_manager.on_chain_start(
             dumpd(self),
             inputs,
-            run_id,
             name=run_name,
         )
         try:
@@ -181,7 +178,6 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
         tags = config.get("tags")
         metadata = config.get("metadata")
         run_name = config.get("run_name") or self.get_name()
-        run_id = config.get("run_id")
         include_run_info = kwargs.get("include_run_info", False)
         return_only_outputs = kwargs.get("return_only_outputs", False)
 
@@ -199,7 +195,6 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
         run_manager = await callback_manager.on_chain_start(
             dumpd(self),
             inputs,
-            run_id,
             name=run_name,
         )
         try:
@@ -209,7 +204,7 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
                 if new_arg_supported
                 else await self._acall(inputs)
             )
-            final_outputs: Dict[str, Any] = await self.aprep_outputs(
+            final_outputs: Dict[str, Any] = self.prep_outputs(
                 inputs, outputs, return_only_outputs
             )
         except BaseException as e:
@@ -336,7 +331,7 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
             None, self._call, inputs, run_manager.get_sync() if run_manager else None
         )
 
-    @deprecated("0.1.0", alternative="invoke", removal="0.3.0")
+    @deprecated("0.1.0", alternative="invoke", removal="0.2.0")
     def __call__(
         self,
         inputs: Union[Dict[str, Any], Any],
@@ -387,7 +382,7 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
             include_run_info=include_run_info,
         )
 
-    @deprecated("0.1.0", alternative="ainvoke", removal="0.3.0")
+    @deprecated("0.1.0", alternative="ainvoke", removal="0.2.0")
     async def acall(
         self,
         inputs: Union[Dict[str, Any], Any],
@@ -463,32 +458,6 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
         else:
             return {**inputs, **outputs}
 
-    async def aprep_outputs(
-        self,
-        inputs: Dict[str, str],
-        outputs: Dict[str, str],
-        return_only_outputs: bool = False,
-    ) -> Dict[str, str]:
-        """Validate and prepare chain outputs, and save info about this run to memory.
-
-        Args:
-            inputs: Dictionary of chain inputs, including any inputs added by chain
-                memory.
-            outputs: Dictionary of initial chain outputs.
-            return_only_outputs: Whether to only return the chain outputs. If False,
-                inputs are also added to the final outputs.
-
-        Returns:
-            A dict of the final chain outputs.
-        """
-        self._validate_outputs(outputs)
-        if self.memory is not None:
-            await self.memory.asave_context(inputs, outputs)
-        if return_only_outputs:
-            return outputs
-        else:
-            return {**inputs, **outputs}
-
     def prep_inputs(self, inputs: Union[Dict[str, Any], Any]) -> Dict[str, str]:
         """Prepare chain inputs, including adding inputs from memory.
 
@@ -546,7 +515,7 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
             )
         return self.output_keys[0]
 
-    @deprecated("0.1.0", alternative="invoke", removal="0.3.0")
+    @deprecated("0.1.0", alternative="invoke", removal="0.2.0")
     def run(
         self,
         *args: Any,
@@ -617,7 +586,7 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
                 f" but not both. Got args: {args} and kwargs: {kwargs}."
             )
 
-    @deprecated("0.1.0", alternative="ainvoke", removal="0.3.0")
+    @deprecated("0.1.0", alternative="ainvoke", removal="0.2.0")
     async def arun(
         self,
         *args: Any,
@@ -755,7 +724,7 @@ class Chain(RunnableSerializable[Dict[str, Any], Dict[str, Any]], ABC):
         else:
             raise ValueError(f"{save_path} must be json or yaml")
 
-    @deprecated("0.1.0", alternative="batch", removal="0.3.0")
+    @deprecated("0.1.0", alternative="batch", removal="0.2.0")
     def apply(
         self, input_list: List[Dict[str, Any]], callbacks: Callbacks = None
     ) -> List[Dict[str, str]]:

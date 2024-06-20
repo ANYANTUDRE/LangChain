@@ -27,7 +27,7 @@ class ArxivQueryRun(BaseTool):
         "from scientific articles on arxiv.org. "
         "Input should be a search query."
     )
-    api_wrapper: ArxivAPIWrapper = Field(default_factory=ArxivAPIWrapper)  # type: ignore[arg-type]
+    api_wrapper: ArxivAPIWrapper = Field(default_factory=ArxivAPIWrapper)
     args_schema: Type[BaseModel] = ArxivInput
 
     def _run(

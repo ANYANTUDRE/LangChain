@@ -50,10 +50,10 @@ class WikipediaLoader(BaseLoader):
             A list of Document objects representing the loaded
                 Wikipedia pages.
         """
-        client = WikipediaAPIWrapper(  # type: ignore[call-arg]
+        client = WikipediaAPIWrapper(
             lang=self.lang,
-            top_k_results=self.load_max_docs,  # type: ignore[arg-type]
-            load_all_available_meta=self.load_all_available_meta,  # type: ignore[arg-type]
-            doc_content_chars_max=self.doc_content_chars_max,  # type: ignore[arg-type]
+            top_k_results=self.load_max_docs,
+            load_all_available_meta=self.load_all_available_meta,
+            doc_content_chars_max=self.doc_content_chars_max,
         )
         yield from client.load(self.query)

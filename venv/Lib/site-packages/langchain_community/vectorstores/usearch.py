@@ -5,7 +5,6 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 import numpy as np
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
-from langchain_core.utils import guard_import
 from langchain_core.vectorstores import VectorStore
 
 from langchain_community.docstore.base import AddableMixin, Docstore
@@ -16,7 +15,14 @@ def dependable_usearch_import() -> Any:
     """
     Import usearch if available, otherwise raise error.
     """
-    return guard_import("usearch.index")
+    try:
+        import usearch.index
+    except ImportError:
+        raise ImportError(
+            "Could not import usearch python package. "
+            "Please install it with `pip install usearch` "
+        )
+    return usearch.index
 
 
 class USearch(VectorStore):
@@ -164,7 +170,7 @@ class USearch(VectorStore):
             documents.append(Document(page_content=text, metadata=metadata))
 
         docstore = InMemoryDocstore(dict(zip(ids, documents)))
-        usearch = guard_import("usearch.index")
+        usearch = dependable_usearch_import()
         index = usearch.Index(ndim=len(embeddings[0]), metric=metric)
         index.add(np.array(ids), np.array(embeddings))
         return cls(embedding, index, docstore, ids.tolist())
