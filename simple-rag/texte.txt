@@ -1,0 +1,77 @@
+						AgriBF
+
+-------------------------------------------------FONCTIONALITES--------------------------------------------------
+
+Vous etes agriculteur/ferme locale?
+- [1] Permettre aux agriculteurs de pouvoir détecter les maladies des plantes
+- Système d'irrigation sur mesure
+- Offrir une asitance spécialisée aux agriculteurs / meilleures pratiques en agriculture
+- Informations en temps réel sur le climat et la température
+- Based on these measurements, predict the optimal crop choice based on the measurements of essential soil metrics(pH, Potassium, Phosphorous, Nitrogen)
+
+Vous etes investisseurs/entreprise/ferme locale?
+- Informations fiables sur l'agriculture 
+- Quelles organismes contacter / étapes à suivre pour investir dans l'agriculture au Burkina Faso?
+
+
+Vous etes un politique: Ministère de l'agriculture/ONG/Haut cadre?
+- Pour suivre l'evolution des recoltes par année en fonction de conditions climatiques
+
+Vous etes un particulier/agriculture hors sol?
+- Conseils sur mesure pour reussir vos plantations.
+
+
+-----------------------------------------------SOURCES DE DONNEES-------------------------------------------------
+
+- LES POLITIQUES AGRICOLES À TRAVERS LE MONDE: cas du Burkina Faso:
+https://agriculture.gouv.fr/sites/default/files/fichepays2014-burkina-faso_cle499519.pdf
+
+- Revue des politiques agricoles et alimentaires au Burkina Faso
+https://www.fao.org/fileadmin/templates/mafap/documents/Burkina_Faso/BURKINA_FASO_Country_Report_FR_July2013.pdf
+
+- L'Agriculture burkinabè:
+https://beep.ird.fr/collect/cnda/index/assoc/HASH53ee.dir/03920.pdf
+
+- 1767_KIT_boek_Burkina_web-version.pdf
+https://www.kit.nl/wp-content/uploads/2018/08/1767_KIT_boek_Burkina_web-version.pdf
+
+- Source de livres à télécharger:
+https://www.scribd.com/search?query=agriculture&filters=%7B%22num_pages%22%3A%22100%2B%22%2C%22language%22%3A%5B%225%22%5D%7D&page=22
+- 
+https://www.scribd.com/document/536717077/10-Cles-Pour-Reussir-Dans-l-Agro-Business-en-Afrique
+
+
+
+- 
+https://www.scribd.com/document/619411542/cours-agriculture-generale
+
+
+
+- Images drones Ghana/Uganda:
+https://huggingface.co/datasets/KaraAgroAI/Drone-based-Agricultural-Dataset-for-Crop-Yield-Estimation/tree/main/data
+
+
+--------------------------------------------------INSTITUTIONS----------------------------------------------------------
+- Ecole nationale de formation agricole de Matourkou (ENAFA de Matourkou):
+https://enafa.gov.bf/
+
+- FAR: https://www.reseau-far.com/
+
+
+
+----------------------------------------------------APIs------------------------------------
+- APIs intéressantes: Climate, Environment, Imagery and Weather (5)
+https://gaia-mistral.org/public_datas/
+
+- Current weather data:
+https://openweathermap.org/current
+
+
+
+--------------------------------------------ARCHITECTURE TECHNIQUE---------------------------------------
+- Finetuning du modèle : Qwen/Qwen-VL-Chat | KissanAI/Dhenu-vision-lora-0.1
+Repo GitHub: https://github.com/QwenLM/Qwen-VL
+
+- RAG pour 
+* Encoder/Embedding: recobo/agriculture-bert-uncased
+

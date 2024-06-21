@@ -13,3 +13,8 @@ playwright
 tiktoken
 scrapegraphai
 nest_asyncio
+pypdf 
+chroma
+chromadb
+faiss-cpu
+sentence-transformers
